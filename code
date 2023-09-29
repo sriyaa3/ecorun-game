@@ -1,0 +1,54 @@
+import pygame
+import random
+
+# Initialize pygame
+pygame.init()
+
+# Screen dimensions
+WIDTH, HEIGHT = 800, 600
+
+# Colors
+WHITE = (255, 255, 255)
+GREEN = (0, 255, 0)
+RED = (255, 0, 0)
+
+# Setup display
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("EcoRun")
+
+# Define Eco character
+eco = pygame.Rect(WIDTH // 4, HEIGHT - 50, 40, 40)
+
+# Define obstacles
+obstacles = [pygame.Rect(WIDTH, HEIGHT - 50, 50, 30) for _ in range(5)]
+
+def move_obstacles():
+    for obstacle in obstacles:
+        obstacle.move_ip(-5, 0)
+        if obstacle.left < 0:
+            obstacle.right = WIDTH
+            obstacle.top = HEIGHT - random.randint(20, 50)
+
+# Game loop
+running = True
+while running:
+    screen.fill(WHITE)
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_SPACE]:
+        eco.move_ip(0, -5)  # Simplified jump
+    
+    eco.move_ip(0, 1)  # Gravity effect
+    move_obstacles()
+
+    pygame.draw.rect(screen, GREEN, eco)
+    for obstacle in obstacles:
+        pygame.draw.rect(screen, RED, obstacle)
+
+    pygame.display.flip()
+    pygame.time.wait(50)
+
+pygame.quit()
